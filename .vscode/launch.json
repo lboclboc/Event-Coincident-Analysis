@@ -15,19 +15,19 @@
             "name": "f1 and f2",
             "type": "python",
             "request": "launch",
-            "program": "eca/eca.py",
+            "module": "eca",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["f1", "f2"]
+            "args": ["tests/f1", "tests/f2"]
         },
         {
-            "name": "real data",
+            "name": "../tmp/f1 and ../tmp/f2",
             "type": "python",
             "request": "launch",
-            "program": "eca/eca.py",
+            "module": "eca",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["-v", "--overlap", "3.0", "all-interrupts.log", "px2jenkins-0.gc"]
+            "args": ["../tmp/f1", "../tmp/f2"]
         }        
     ]
 }
