@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "help",
+            "type": "python",
+            "request": "launch",
+            "program": "eca/eca.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--help"]
+        },
+        {
+            "name": "f1 and f2",
+            "type": "python",
+            "request": "launch",
+            "program": "eca/eca.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["f1", "f2"]
+        },
+        {
+            "name": "real data",
+            "type": "python",
+            "request": "launch",
+            "program": "eca/eca.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["-v", "--overlap", "3.0", "all-interrupts.log", "px2jenkins-0.gc"]
+        }        
+    ]
+}
