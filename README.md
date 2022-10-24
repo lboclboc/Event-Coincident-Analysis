@@ -1,5 +1,5 @@
 # Event-Coincident-Analysis
-Python project for correlating date/time events listed in two files.
+Python project for correlating date/time events
 
 # Usage
 eca.py [--verbose] [--overlap <seconds>] file1 file2
@@ -9,15 +9,37 @@ of format like: 2022-10-23T11:22:32.2323Z
 
 By default conincidence  is calculated with 1 second overlap.
 
+# Terminology
+- MasterEvents   - The list of events where incidents ocurred.
+- TextEvents     - Event log with textual information
+- MetricValues   - Continous values
+- EventSource    - Sore for event information to examine, like TextEvents or MetricValues
+- EventCategory  - Each EventSource can be assigned an EventCategory for grouping matches.
+
 # Supported timeformats:
 - 2022-10-20T04:33:05.328430Z
 
-# Todo
+# Yaml config syntax:
+events:
+- filename: name
+  categories: [categories]
+  master: <true/false>
+  type: text-events
+  date-format: <auto|iso|"{year:4}...">
+  timezone: <+/- hours>
+  default-date: <default date for non date timestamps>
+  default-time: <default start time for time delta timestamps>
+
+# TODO
 Support time ranges from the file.
 
 Warn about lines not containing timestamps
 
 Examine first part of file to determine time stamp format
+
+Find patterns that conicide with the events but not outside the events. As a percentage match.
+
+Dates in logfiles before the first event should be discarded since they may turn up as matches in good time spans.
 
 yaml-based input with info like:
 - tags for file

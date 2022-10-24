@@ -66,7 +66,7 @@ class TimeSpan:
     def __init__(self, t: datetime, d: timedelta):
         self.time = t
         self.duration = d
-    
+
     def is_coincident(self, other) -> bool:
         s1 = self.time
         s2 = self.time + self.duration
