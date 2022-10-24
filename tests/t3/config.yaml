@@ -1,0 +1,16 @@
+range: 60s
+
+sources:
+- filename: events.log
+  categories: [main]
+  master: true
+  type: text-events
+  date-format: auto
+
+- filename: errors
+  categories: [main]
+  type: text-events
+  date-format: auto
+  normalizers:
+  - no-digits
+  - no-punctuation

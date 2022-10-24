@@ -1,33 +1,40 @@
 {
     "version": "0.2.0",
     "configurations": [
-
         {
-            "name": "help",
-            "type": "python",
-            "request": "launch",
-            "program": "eca/eca.py",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "args": ["--help"]
-        },
-        {
-            "name": "f1 and f2",
+            "name": "t1",
             "type": "python",
             "request": "launch",
             "module": "eca",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["tests/f1", "tests/f2"]
+            "args": ["tests/t1/config.yaml"]
         },
         {
-            "name": "../tmp/f1 and ../tmp/f2",
+            "name": "t2",
             "type": "python",
             "request": "launch",
             "module": "eca",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["../tmp/f1", "../tmp/f2"]
-        }        
+            "args": ["tests/t2/config.yaml"]
+        },
+        {
+            "name": "t3",
+            "type": "python",
+            "request": "launch",
+            "module": "eca",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["tests/t3/config.yaml"]
+        },
+        {
+            "name": "eca.config",
+            "type": "python",
+            "request": "launch",
+            "module": "eca.config",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
     ]
 }

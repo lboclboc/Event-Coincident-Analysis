@@ -8,6 +8,7 @@ and then grep out from logfiles suspicious entries. By comparing the times from 
 gets amatch number of how many coincide in time.
 """
 from abc import abstractmethod
+import argparse
 from datetime import datetime, timedelta
 import logging
 import re
@@ -21,7 +22,8 @@ class Parser(Protocol):
     @abstractmethod
     def set_overlap(self, o: float):
         ...
-    @abstractmethod        
+
+    @abstractmethod
     def __call__(self):
         ...
 
@@ -42,7 +44,7 @@ class ParserFactory:
         def set_overlap(self, overlap):
             self._overlap = overlap
 
-        def __call__(self, s:str):
+        def __call__(self, s: str):
             if not s:
                 return None
             match = self.re.search(s)
@@ -83,7 +85,7 @@ class TimeSpan:
 
         return not ((o1 < s1 and o2 < s1) or (o1 > s2 and o2 > s2))
 
-def compare_files(files:List[str], parsers:List[Parser]) -> None:
+def compare_files(files: List[str], parsers: List[Parser]) -> None:
     line = [None] * 2
     fin = [None] * 2
     span = [None] * 2
@@ -119,3 +121,43 @@ def compare_files(files:List[str], parsers:List[Parser]) -> None:
                 break
 
     return (coincidents, misses)
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+
+    regex_default = r'^(.*)$'
+    regex_desc = f"Regular expression for selecting time and possible time range, defaults to {regex_default}"
+    parser.add_argument("--regex1", default=regex_default, help=regex_desc)
+    parser.add_argument("--regex2", default=regex_default, help=regex_desc)
+
+    format_default = "iso"
+    format_desc = f"Format for parsing times from first file, default {format_default}. Either 'iso' or see pydoc time.strptime."
+    parser.add_argument("--time-format1", default=format_default, help=format_desc)
+    parser.add_argument("--time-format2", default=format_default, help=format_desc)
+
+    parser.add_argument("--time-margin", default="10", help="number of seconds for time stamp to be considered coincident")
+    parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("-o", "--overlap", default=1.0, type=float, help="How much overlaping time (in seconds) to work with.")
+
+    parser.add_argument("files", nargs=2, help="input files")
+
+    return parser.parse_args()
+def main():
+    args = parse_arguments()
+    if args.verbose:
+        logger.setLevel(logging.INFO)
+
+    parsers = list()
+
+    for i in range(2):
+        format = getattr(args, f"time_format{i+1}")
+        p = ParserFactory.get_parser(format)
+        p.set_overlap(args.overlap)
+        parsers.append(p)
+
+    (coincidents, misses) = compare_files(args.files, parsers)
+    print(f"{coincidents} coincidents and {misses} misses")
+
+
+if __name__ == "__main__":
+    main()

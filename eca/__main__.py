@@ -1,43 +1,41 @@
 #!/usr/bin/env python3
-import argparse
-from eca import eca
-import logging
+from collections import defaultdict
+import eca.config
+from eca.timestamp import TimestampDB
+import sys
 
-def parse_arguments():
-    parser = argparse.ArgumentParser()
-
-    regex_default = r'^(.*)$'
-    regex_desc = f"Regular expression for selecting time and possible time range, defaults to {regex_default}"
-    parser.add_argument("--regex1", default=regex_default, help=regex_desc)
-    parser.add_argument("--regex2", default=regex_default, help=regex_desc)
-
-    format_default = "iso"
-    format_desc = f"Format for parsing times from first file, default {format_default}. Either 'iso' or see pydoc time.strptime."
-    parser.add_argument("--time-format1", default=format_default, help=format_desc)
-    parser.add_argument("--time-format2", default=format_default, help=format_desc)
-
-    parser.add_argument("--time-margin", default="10", help="number of seconds for time stamp to be considered coincident")
-    parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-o", "--overlap", default=1.0, type=float, help="How much overlaping time (in seconds) to work with.")
-
-    parser.add_argument("files", nargs=2, help="input files")
-
-    return parser.parse_args()
 def main():
-    args = parse_arguments()
-    if args.verbose:
-        eca.logger.setLevel(logging.INFO)
+    if len(sys.argv) != 2:
+        raise RuntimeError("Usage: eca <yaml-config-file>")
+    config = eca.config.Config(sys.argv[1])
 
-    parsers = list()
+    # Collect all timestamps for incidents.
+    timestamps: TimestampDB = TimestampDB(range=config.range)
+    for s in config.event_sources(master=True):
+        for ts, line in s.get_events():
+            timestamps.append(ts)
 
-    for i in range(2):
-        format = getattr(args, f"time_format{i+1}")
-        p = eca.ParserFactory.get_parser(format)
-        p.set_overlap(args.overlap)
-        parsers.append(p)
+    # Collect all texts and if they are applicable order into either within or outside
+    # event timestamps.
+    texts_within = defaultdict(int)
+    texts_outside = defaultdict(int)
+    for es in config.event_sources(master=False):
+        for ts, line in es.get_events():
+            line = es.normalize(line)
+            if timestamps.is_applicable(ts):
+                if timestamps.in_range(ts):
+                    texts_within[line] += 1
+                    print(f"inside:  {ts} - {line}")
+                else:
+                    texts_outside[line] += 1
+                    print(f"outside: {ts} - {line}")
 
-    (coincidents, misses) = eca.compare_files(args.files, parsers)
-    print(f"{coincidents} coincidents and {misses} misses")
+    # Find texts that only occur close to incident events but not otherwise.
+    for txt in texts_within:
+        if txt not in texts_outside:
+            print(f"Text only occuring during incident event: {txt}")
+
+    print(f"total {len(timestamps)} incidents, {len(texts_within)} unique texts found inside event range, {len(texts_outside)} outside")
 
 
 if __name__ == "__main__":

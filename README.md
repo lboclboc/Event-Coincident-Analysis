@@ -20,7 +20,7 @@ By default conincidence  is calculated with 1 second overlap.
 - 2022-10-20T04:33:05.328430Z
 
 # Yaml config syntax:
-events:
+sources:
 - filename: name
   categories: [categories]
   master: <true/false>
@@ -29,6 +29,7 @@ events:
   timezone: <+/- hours>
   default-date: <default date for non date timestamps>
   default-time: <default start time for time delta timestamps>
+  normalizers: [remove-digits]
 
 # TODO
 Support time ranges from the file.
