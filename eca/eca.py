@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""
+Simple script to match timed events.
+
+It compare two files with event dates and calculates how many of them match in time.
+This can be used for instance to grep out from one file the events when an incident occurs
+and then grep out from logfiles suspicious entries. By comparing the times from those one
+gets amatch number of how many coincide in time.
+"""
 from abc import abstractmethod
 from datetime import datetime, timedelta
 import logging
