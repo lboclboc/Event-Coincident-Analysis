@@ -35,6 +35,15 @@
             "module": "eca.config",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "jenkins",
+            "type": "python",
+            "request": "launch",
+            "module": "eca",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["tests/jenkins/config.yaml"]
         }
     ]
 }

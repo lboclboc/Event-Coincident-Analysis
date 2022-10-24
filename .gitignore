@@ -2,3 +2,9 @@ dist
 __pycache__
 .venv
 tests/severe-conflict
+x.py
+tests/jenkins/events
+tests/t1/error_log
+tests/t2/error_log
+tests/t2/events.log
+tests/jenkins/full

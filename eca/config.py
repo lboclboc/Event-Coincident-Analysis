@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from datetime import timedelta
-import eca.sources
+from eca.sources import TextEvents
 import eca.dateparser
 import os
 from eca.normalizer import Normalizer
@@ -11,6 +11,8 @@ import yaml
 class Config:
     global_defaults = {
         "range": "1s",
+        "percentile": 90,
+        "accuracy": 90,
     }
 
     source_defaults = {
@@ -40,7 +42,7 @@ class Config:
             date_parser = eca.dateparser.create_parser_from_str(e['date-format'])
 
             if e['type'] == 'text-events':
-                es = eca.sources.TextEvents(filename=filename, date_parser=date_parser, master=e['master'])
+                es = TextEvents(filename=filename, date_parser=date_parser, master=e['master'])
             else:
                 raise RuntimeError(f"unknown event type: {e['type']}")
 
@@ -58,9 +60,17 @@ class Config:
     @property
     def range(self) -> timedelta:
         if self._config['range'].endswith('s'):
-            return timedelta(seconds=int(self._config['range'][:-1]))
+            return timedelta(seconds=float(self._config['range'][:-1]))
         else:
             raise RuntimeError(f"Unknown time format for range: {self._config['range']}")
+
+    @property
+    def percentile(self) -> int:
+        return self._config['percentile']
+
+    @property
+    def accuracy(self) -> int:
+        return self._config['accuracy']
 
 
 if __name__ == "__main__":

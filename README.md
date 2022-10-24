@@ -4,7 +4,7 @@ Python project for correlating date/time events
 # Usage
 eca.py [--verbose] [--overlap <seconds>] file1 file2
 
-Each file should be a time sorted list lines containing UTC ISO-timestamps 
+Each file should be a time sorted list lines containing UTC ISO-timestamps
 of format like: 2022-10-23T11:22:32.2323Z
 
 By default conincidence  is calculated with 1 second overlap.
@@ -20,6 +20,22 @@ By default conincidence  is calculated with 1 second overlap.
 - 2022-10-20T04:33:05.328430Z
 
 # Yaml config syntax:
+# Time range during which incident events are considered to coincide. The time span
+# for an incident event is this its parsed start time until start time + this range.
+range: 1s
+
+# Only include texts that is present in this percent of incident events.
+# If 90 cases of a text was found inside incident time span, then a percentil of 90
+# will include those texts.
+percentile: 90
+
+# Number of texts that must occur inside incident time span in percent of total occurences.
+# If a text occurs 100 times in total, and 80 of them during incident time span, then a skew
+# of 80 will include those texts.
+skew: 90
+
+# List of event sources. Event sources where master is set to true is considered to be a source
+# of incident events, the text part of master files are ignored.
 sources:
 - filename: name
   categories: [categories]

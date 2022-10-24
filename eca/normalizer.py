@@ -9,11 +9,9 @@ class Normalizer(Protocol):
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         Normalizer.normalizers[cls.tag] = cls
-        print(f"Registering class {cls}")
 
     @staticmethod
     def create_from_str(name: str):
-        print(f"Generating object from {name} ")
         return Normalizer.normalizers[name]()
 
     def normalize(sel, line: str) -> str:
@@ -27,11 +25,29 @@ class NoDigits(Normalizer):
         return self._re.sub('9', line)
 
 class NoPunctuation(Normalizer):
-    tag = "no-punctuation"
+    tag = "no-punctuations"
     _re = re.compile(r'[^\w\s]+')
 
     def normalize(self, line: str) -> str:
         return self._re.sub('_', line)
+
+class NoChangeid(Normalizer):
+    tag = "no-changeid"
+    _re = re.compile(r"\sI[0-9a-f]+\s")
+
+    def normalize(self, line: str) -> str:
+        return self._re.sub(' change-id ', line)
+
+class NoUUID(Normalizer):
+    tag = "no-uuid"
+    _re = re.compile(r"[0-9a-f]{8}-"
+                     r"[0-9a-f]{4}-"
+                     r"[0-9a-f]{4}-"
+                     r"[0-9a-f]{4}-"
+                     r"[0-9a-f]{12}")
+
+    def normalize(self, line: str) -> str:
+        return self._re.sub('UUID', line)
 
 
 if __name__ == "__main__":
