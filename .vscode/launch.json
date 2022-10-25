@@ -44,6 +44,15 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": ["tests/jenkins/config.yaml"]
+        },
+        {
+            "name": "Docker-In-Agents",
+            "type": "python",
+            "request": "launch",
+            "module": "eca",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["tests/agent-interrupts/config.yaml"]
         }
     ]
 }

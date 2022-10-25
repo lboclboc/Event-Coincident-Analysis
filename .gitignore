@@ -7,4 +7,5 @@ tests/jenkins/events
 tests/t1/error_log
 tests/t2/error_log
 tests/t2/events.log
-tests/jenkins/full
+tests/jenkins
+tests/agent-interrupts
