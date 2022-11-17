@@ -142,6 +142,7 @@ def parse_arguments():
     parser.add_argument("files", nargs=2, help="input files")
 
     return parser.parse_args()
+
 def main():
     args = parse_arguments()
     if args.verbose:

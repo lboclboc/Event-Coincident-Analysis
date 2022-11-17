@@ -38,6 +38,13 @@ class NoChangeid(Normalizer):
     def normalize(self, line: str) -> str:
         return self._re.sub(' change-id ', line)
 
+class NoJoltHash(Normalizer):
+    tag = "no-jolt-hash"
+    _re = re.compile(r"\[[0-9a-f]+\]")
+
+    def normalize(self, line: str) -> str:
+        return self._re.sub('[jolt-hash]', line)
+
 class NoUUID(Normalizer):
     tag = "no-uuid"
     _re = re.compile(r"[0-9a-f]{8}-"

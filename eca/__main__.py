@@ -36,7 +36,9 @@ def main():
     texts_not_applicable = defaultdict(int)
     for es in config.event_sources(master=False):
         for ts, line in es.get_events():
+            logging.debug(f"before normalize: {line}")
             line = es.normalize(line)
+            logging.debug(f"after normalize: {line}")
             if timestamps.is_applicable(ts):
                 if timestamps.in_range(ts):
                     texts_within[line] += 1
