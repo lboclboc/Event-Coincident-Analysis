@@ -32,6 +32,7 @@ class ReParser(ABC):
         return None, line
 
 class ZuluParser(ReParser):
+    """Parsers zulu or UTC timestamps."""
     _re = re.compile(r'(?P<year>\d\d\d\d)-'
                      r'(?P<month>\d\d)-'
                      r'(?P<day>\d\d)T'

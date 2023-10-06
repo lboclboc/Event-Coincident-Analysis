@@ -40,10 +40,11 @@ class NoChangeid(Normalizer):
 
 class NoJoltHash(Normalizer):
     tag = "no-jolt-hash"
-    _re = re.compile(r"\[[0-9a-f]+\]")
+    _re1 = re.compile(r"\[[0-9a-f]+\]")
+    _re2 = re.compile(r"jolt-worker-[^-]+-[^-]+-[^-]+")
 
     def normalize(self, line: str) -> str:
-        return self._re.sub('[jolt-hash]', line)
+        return self._re2.sub('jolt-worker-xxx', self._re1.sub('[jolt-hash]', line))
 
 class NoUUID(Normalizer):
     tag = "no-uuid"
